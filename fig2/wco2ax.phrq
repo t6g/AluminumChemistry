@@ -1,0 +1,108 @@
+database ../phreeqc-ph.dat
+title simulate soil titration Luo without CO2
+
+EXCHANGE_SPECIES
+	Al+3 + 3X- = AlX3
+	log_k	1.57
+	-gamma	9.0	0.0
+
+solution 1
+#pH	U	Sr	Co	Ni	Mn	Fe		Ca	K	Si	Al	Mg	Na
+#3.16	0.0321	0.0021	0.0026	0.0177	0.2912	0.0062		2.6198	33.5021	0.1485	1.9087	0.6992	1.5311
+
+pH     3.16
+Al   1.9087
+Ca   2.6198
+Mg   0.6992
+Mn   0.2912
+K    33.5021
+Si   0.1485
+Fe   0.0062
+Ni   0.0177
+U    0.0321
+Sr   0.0021
+Co   0.0026
+N(5) 3.769 
+S(6) 0.8786
+Cl   0.30 charge
+Na   1.531 
+C(4) 1.0 CO2(g) -0.125
+
+equilibrium_phases 1
+Al(OH)3(a) 0.0 0.0        #1
+Basaluminite 0.0 0.0      #2
+Alunite 0.0 0.0          #3
+#Gibbsite 0.0 0.0         #4
+Jurbanite 0.0 0.0        #5
+#MGibbsite 0.0 0.0        #7
+#Kaolinite 0.0 0.0        #6
+SiO2(a) 0.0 0.0           #8
+CaMg(CO3)2s 0.0 0.0       #9
+CaCO3H2Os 0.0 0.0
+#Aragonite 0.0 0.0         #10
+#Ca0.85Mg0.15CO3s 0.0 0.0  #11
+Portlandite 0.0 0.0       #12 Ca(OH)2
+Gypsum 0.0 0.0            #13 CaSO4.2H2O
+MgCO3s 0.0 0.0            #14 MgCO3
+Mg(OH)2s 0.0 0.0          #15 Mg(OH)2
+MnCO3s 0.0 0.0            #16 synthetic rhodocrosite
+Pyrochroite 0.0 0.0       #17 Mn(OH)2
+#FeCo0.1(OH)3.2s 0.0 0.0   #18
+Fe(OH)3(a) 0.0 0.0       #19
+Ni(OH)2s 0.0 0.0          #20
+NiCO3s 0.0 0.0            #21
+Co(OH)2s 0.0 0.0          #22
+CoCO3s 0.0 0.0            #23
+Rutherfordine 0.0 0.0     #24
+CaUO4s 0.0 0.0            #25
+Schoepite  0.0 0.0        #26
+b-UO2(OH)2(s) 0.0 0.0     #27
+Soddyite 0.0 0.0          #28
+Uranophane 0.0 0.0        #29
+Na-weeksite 0.0 0.0       #30
+Liebigite 0.0 0.0
+UO2SO4(H2O)2.5s 0.0 0.0   #31
+UO2SO4(H2O)3s 0.0 0.0     #32
+UO2SO4(H2O)3.5s 0.0 0.0   #33
+Strontianite 0.0 0.0      #34
+Celestite 0.0 0.0         #35
+CO2(g) -0.125
+
+surface 1
+Hfo_w 0.005673 600 3.007  # 170.2 mmole/kg * 5 g sediment /1000 g/kg /30.0 *0.2
+Hfo_s 0.000142
+Hbo_w Alunite eq 0.2 2496.0
+#Hbo_w Basaluminite eq 0.2 2496.0
+Hgo_w 0.002360 32.0 0.9217 # 70.9 mmole/lg Al * 5 g 
+-equilibrate 1
+
+Exchange 1
+X 0.023
+-equilibrate 1
+
+reaction 1
+NaOH 0.86; Na2CO3 0.07
+0.03 moles in 300 steps
+
+user_graph
+-headings NaOH pH
+-axis_titles "NaOH added (mmol/L)" "pH"
+-axis_scale x_axis 0 20 10
+-axis_scale y_axis 3 10 1
+10 graph_x mol("Na+")*1000
+20 graph_y -lm("H+")
+
+selected_output
+-file wco2ax.txt
+-selected_out true
+-user_punch true
+-reset flase
+-step false
+-reaction true
+-ph true
+-totals U 
+-equilibrium_phases Uranophane Liebigite 
+USER_PUNCH
+-headings HfoU HboU HgoU
+10 punch surf('U', 'Hfo') surf('U', 'Hgo') surf('U', 'Hbo')
+END

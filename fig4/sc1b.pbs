@@ -1,0 +1,15 @@
+#!/bin/bash 
+#PBS -S /bin/bash 
+#PBS -m e 
+#PBS -M t6g@ornl.gov 
+#PBS -N sc1b 
+#PBS -j oe
+#PBS -e sc1b.log
+#PBS -q esmg08q 
+#PBS -l nodes=1,walltime=100:00:00 
+
+cp /home/t6g/phf/sc.al.pp/sc1b.phrq $GLOBAL_SCRATCH
+cp /home/t6g/phf/sc.al.pp/phreeqc-scbal.dat $GLOBAL_SCRATCH
+cd $GLOBAL_SCRATCH
+time phreeqc sc1b.phrq
+cp sc1b.txt /home/t6g/phf/sc.al.pp
